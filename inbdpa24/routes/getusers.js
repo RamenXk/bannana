@@ -6,27 +6,25 @@ const myGetRestCall=require("../middleware/RestAPIGet");
 //including middleware
 
 router.get('/', function(req,res,next) {
-    const url = 'https://inbdpa.api.hscc.bdpa.org/v1/info';
+    const url = 'https://inbdpa.api.hscc.bdpa.org/v1/users';
     const token = process.env.BEARER_TOKEN;
+    //console.log(url); //Debug
 
     // Pass url and token into RestAPIGet and pull information from response
     myGetRestCall.getWithBearerToken(url, token)
     .then(data => {
+        console.log("REST CALL ", data);
         if (data.success){
-            var opportunities=data.info.opportunities;
-            var sessions=data.info.sessions;
-            var users=data.info.users;
-            var views=data.info.views;
-            res.render('stats', {
+            // SUBJECT TO CHANGE
+            var userlist=data.users;
+
+            res.render('getusers', {
                 title: 'inBDPA Stats' ,
-                opportunities: opportunities,
-                sessions:sessions,
-                users:users,
-                views:views
+                users: userlist
             });
         } // closes if statement
         else{
-            res.render('error', {title: 'Stats call failed'});
+            res.render('error', {title: 'Stats call failed', message: data.error});
         }
     }) // data then component
     .catch(error => console.error(error));

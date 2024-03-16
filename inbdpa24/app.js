@@ -11,7 +11,7 @@ var usersRouter = require('./routes/users');
 var page2Router = require('./routes/page2');
 var statsRouter = require('./routes/stats');
 var loginRouter = require('./routes/login');
-
+var getusersRouter = require('./routes/getusers');
 var app = express();
 
 // view engine setup
@@ -31,7 +31,7 @@ app.use('/page2', page2Router);
 app.use('/index', indexRouter);
 app.use('/stats', statsRouter);
 app.use('/login', loginRouter);  // ADDE 3/9/24
-
+app.use('/getusers', getusersRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
