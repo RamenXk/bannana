@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var jwt=require('jsonwebtoken');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -155,6 +156,8 @@ router.post('/', async(req, res, next) => {
                 console.log('User is found');
                 console.log(responseParsed.user);
                 var user_id=responseParsed.user.user_id;
+                var role=responseParsed.user.type;
+                var username=responseParsed.user.username;
                 console.log('User id=',user_id);
                 var salt=responseParsed.user.salt;
                 var saltBuffer=convertHexToBuffer(salt);
@@ -177,7 +180,7 @@ router.post('/', async(req, res, next) => {
                 };
                 const data=JSON.stringify(datakey);
 
-                const authurl= 'https://inbdpa.api.hscc.bdpa.org/v1/users/'+user_id+'/auth'
+                const authurl= 'https://inbdpa.api.hscc.bdpa.org/v1/users/'+user_id+'/auth'; 
                 const request = httpRequest.request(authurl, options, response => {      
                 console.log('Status', response.statusCode);
                 console.log('Headers', response.headers);
@@ -192,6 +195,20 @@ router.post('/', async(req, res, next) => {
                     console.log("Success", responseParsed.success);
                     if (responseParsed.success==true)
                     {
+                        console.log("Successful log");
+                        console.log(role);
+                        console.log(user_id);
+                        global.user_id = user_id;
+                        global.role = role;
+
+                        console.log(username);
+                        var token = jwt.sign({
+                          id: user_id, role: role, name:username
+                          }, process.env.BEARER_TOKEN, {
+                          expiresIn: 86400000
+                          });
+                          console.log(token);
+                        global.userToken=token;
                         res.render('goodlogin', { title: 'Login Successful' });
                     }
                     else

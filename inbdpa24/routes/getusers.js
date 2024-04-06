@@ -4,9 +4,10 @@ var router = express.Router();
 
 const myGetRestCall=require("../middleware/RestAPIGet");
 const myIncrementRestCall = require("../middleware/RestAPIIncrement");
+const auth = require("../middleware/verifyToken");
 //including middleware
 
-router.get('/', function(req,res,next) {
+router.get('/', auth, function(req,res,next) {
     const url = 'https://inbdpa.api.hscc.bdpa.org/v1/user'
     const token = process.env.BEARER_TOKEN;
     //console.log(url); //Debug

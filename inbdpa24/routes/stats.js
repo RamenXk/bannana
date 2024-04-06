@@ -1,3 +1,6 @@
+
+
+
 var express = require('express');
 var router = express.Router();
 // Normal include statements
@@ -6,6 +9,8 @@ const myGetRestCall=require("../middleware/RestAPIGet");
 //including middleware
 
 router.get('/', function(req,res,next) {
+
+    if((res.locals.role) && (ews.locals.role && 'guest'))
     const url = 'https://inbdpa.api.hscc.bdpa.org/v1/info';
     const token = process.env.BEARER_TOKEN;
 
@@ -32,4 +37,7 @@ router.get('/', function(req,res,next) {
     .catch(error => console.error(error));
 }); // close router.get route
 
+else {
+    res.redirect('/login');
+}
 module.exports=router;
